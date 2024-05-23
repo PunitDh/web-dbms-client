@@ -1,6 +1,7 @@
 import { webdbmsAPI } from "@/api/webdbmsAPI";
 import DataTable from "../../components/DataTable";
-import { SearchParams } from "@/api/responseTypes";
+import { SearchParams } from "@/types";
+import ColumnFilter from "../../components/ColumnFilter";
 
 type Props = {
   params: {
@@ -10,14 +11,16 @@ type Props = {
 };
 
 export default async function TableName({ params, searchParams }: Props) {
-  console.log(searchParams);
-  
-  const tableData = await webdbmsAPI.getTableData(params.tablename, searchParams);
+  const tableData = await webdbmsAPI.getTableData(
+    params.tablename,
+    searchParams
+  );
 
   return (
-    <main className="flex flex-col justify-between px-8 gap-4">
+    <>
       <h1 className="font-bold text-xl">Table `{tableData.tablename}`</h1>
+      <ColumnFilter tableData={tableData} />
       <DataTable tableData={tableData} searchParams={searchParams} />
-    </main>
+    </>
   );
 }

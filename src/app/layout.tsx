@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import NavigationBar from "@/components/NavigationBar";
-import { webdbmsAPI } from "@/api/webdbmsAPI";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,18 +10,19 @@ export const metadata: Metadata = {
   icons: { icon: "./favicon.ico" },
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
+type Props = Readonly<{
   children: React.ReactNode;
-}>) {
-  const tablesResponse = await webdbmsAPI.getAllTables();
+  navigationBar: React.ReactNode;
+}>;
 
+export default async function RootLayout({ navigationBar, children }: Props) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NavigationBar tables={tablesResponse.tables} />
-        {children}
+        {navigationBar}
+        <main className="flex flex-col justify-between px-8 gap-4 pt-4">
+          {children}
+        </main>
       </body>
     </html>
   );

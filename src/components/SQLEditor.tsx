@@ -1,16 +1,21 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import CodeMirror from "codemirror";
+import CodeMirror, { EditorConfiguration } from "codemirror";
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/sql/sql";
 import "codemirror/theme/material-palenight.css";
 import { Button } from "@nextui-org/react";
 import { webdbmsAPI } from "@/api/webdbmsAPI";
-import { QueryResult } from "@/api/responseTypes";
+import { QueryResult, SearchParams } from "@/types";
 import QueryResultTable from "./QueryResultTable";
+import "./sqleditor.css";
 
-const SQLEditor = () => {
+type Props = {
+  searchParams: SearchParams;
+}
+
+const SQLEditor = ({ searchParams }: Props) => {
   const textAreaRef = useRef(null);
   const [value, setValue] = useState<string>();
   const [runResult, setRunResult] = useState<QueryResult>();
@@ -19,7 +24,6 @@ const SQLEditor = () => {
     e.preventDefault();
     if (value) {
       const result = await webdbmsAPI.runQuery(value);
-      console.log(result);
       setRunResult(result);
     }
   };
@@ -27,11 +31,17 @@ const SQLEditor = () => {
   useEffect(() => {
     let editor: CodeMirror.EditorFromTextArea;
     if (textAreaRef.current) {
-      editor = CodeMirror.fromTextArea(textAreaRef.current, {
+      const editorConfiguration: EditorConfiguration = {
         mode: "text/x-sql",
         theme: "material-palenight",
         lineNumbers: true,
-      });
+        extraKeys: { "Ctrl-Space": "autocomplete" },
+      };
+
+      editor = CodeMirror.fromTextArea(
+        textAreaRef.current,
+        editorConfiguration
+      );
 
       editor.on("change", (editor) => {
         setValue(editor.getValue());
@@ -52,7 +62,7 @@ const SQLEditor = () => {
       >
         Run Query
       </Button>
-      {runResult && <QueryResultTable tableData={runResult} />}
+      {runResult && <QueryResultTable tableData={runResult} searchParams={searchParams} />}
     </form>
   );
 };

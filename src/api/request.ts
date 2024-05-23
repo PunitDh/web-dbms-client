@@ -16,6 +16,8 @@ type RequestProps = {
   body?: Record<string, unknown>;
 };
 
+const APPLICATION_JSON = "application/json" as const;
+
 export async function sendRequest<T>({
   endpoint,
   method,
@@ -26,8 +28,8 @@ export async function sendRequest<T>({
     method,
     cache: "no-store",
     headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      "Content-Type": APPLICATION_JSON,
+      Accept: APPLICATION_JSON,
     },
     body: body ? JSON.stringify(body) : undefined,
   });

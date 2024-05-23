@@ -25,7 +25,7 @@ export type SearchParams = Record<string, string | string[] | undefined>;
 
 type DataRow = Record<string, unknown>;
 
-type Column = {
+export type Column = {
   column_name: string;
   data_type: string;
 };

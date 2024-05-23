@@ -4,7 +4,7 @@ import {
   SearchParams,
   TableResponse,
   TablesResponse,
-} from "./responseTypes";
+} from "@/types";
 
 interface WebDBMSAPI {
   getAllTables: () => Promise<TablesResponse>;
